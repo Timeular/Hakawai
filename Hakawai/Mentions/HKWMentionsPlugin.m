@@ -114,6 +114,7 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
 
 @property (nonatomic, strong) NSDictionary *mentionSelectedAttributes;
 @property (nonatomic, strong) NSDictionary *mentionUnselectedAttributes;
+@property (nonatomic, strong) NSDictionary *defaultTextAttributes;
 
 @property (nonatomic, readwrite) HKWMentionsChooserPositionMode chooserPositionMode;
 
@@ -182,14 +183,16 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
                              controlCharacters:controlCharacterSet
                                   searchLength:searchLength
                    unselectedMentionAttributes:unselectedAttributes
-                     selectedMentionAttributes:selectedAttributes];
+                     selectedMentionAttributes:selectedAttributes
+                         defaultTextAttributes:nil];
 }
 
 + (instancetype)mentionsPluginWithChooserMode:(HKWMentionsChooserPositionMode)mode
                             controlCharacters:(NSCharacterSet *)controlCharacterSet
                                  searchLength:(NSInteger)searchLength
                   unselectedMentionAttributes:(NSDictionary *)unselectedAttributes
-                    selectedMentionAttributes:(NSDictionary *)selectedAttributes {
+                    selectedMentionAttributes:(NSDictionary *)selectedAttributes
+                        defaultTextAttributes:(NSDictionary *)defaultAttributes {
     // Make sure iOS version is 7.1 or greater
     if (!HKW_systemVersionIsAtLeast(@"7.1")) {
         NSAssert(NO, @"Mentions plug-in is only supported for iOS 7.1 or later.");
@@ -229,6 +232,22 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
         [buffer removeObjectForKey:badAttribute];
     }
     plugin.mentionSelectedAttributes = [buffer copy];
+    
+    // (default text attributes)
+    [badAttributes removeAllObjects];
+    if(defaultAttributes != nil) {
+        for (id attribute in defaultAttributes) {
+            if (![attribute isKindOfClass:[NSString class]]
+                || [attribute isEqualToString:HKWMentionAttributeName]) {
+                [badAttributes addObject:attribute];
+            }
+        }
+        buffer = [defaultAttributes copy] ?: [NSMutableDictionary dictionary];
+        for (id badAttribute in badAttributes) {
+            [buffer removeObjectForKey:badAttribute];
+        }
+        plugin.defaultTextAttributes = [buffer copy];
+    }
 
     return plugin;
 }
@@ -597,6 +616,8 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
                                       for (NSString *key in selectedAttributes) {
                                           [buffer removeAttribute:key range:HKW_FULL_RANGE(input)];
                                       }
+                                      // restore default text attributes
+                                      [buffer addAttributes:self.defaultTextAttributes range:HKW_FULL_RANGE(input)];
                                       return [buffer copy];
                                   }];
     }
@@ -641,6 +662,8 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
         for (NSString *key in unselectedAttributes) {
             [buffer removeAttribute:key range:HKW_FULL_RANGE(input)];
         }
+        // restore default text attributes
+        [buffer addAttributes:self.defaultTextAttributes range:HKW_FULL_RANGE(input)];
         return [buffer copy];
     }];
 }

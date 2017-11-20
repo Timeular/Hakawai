@@ -283,7 +283,8 @@ typedef NS_ENUM(NSInteger, HKWMentionsPluginState) {
                             controlCharacters:(NSCharacterSet *)controlCharacterSet
                                  searchLength:(NSInteger)searchLength
                   unselectedMentionAttributes:(NSDictionary *)unselectedAttributes
-                    selectedMentionAttributes:(NSDictionary *)selectedAttributes;
+                    selectedMentionAttributes:(NSDictionary *)selectedAttributes
+                        defaultTextAttributes:(NSDictionary *)defaultAttributes;
 
 #pragma mark - API
 
