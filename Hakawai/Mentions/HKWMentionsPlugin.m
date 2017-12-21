@@ -798,17 +798,15 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
 }
 
 - (void)toggleAutocorrectAsRequiredForRange:(NSRange)range {
-    // PROVISIONAL FIX: Determine whether or not a mention exists, and disable or enable autocorrect
-    if (self.state == HKWMentionsPluginStateCreatingMention) {
-        return;
-    }
-    BOOL shouldDisable = [self rangeTouchesMentions:range] || [self rangeTouchesMentions:self.parentTextView.selectedRange];
-    if (shouldDisable) {
-        [self.parentTextView overrideAutocorrectionWith:UITextAutocorrectionTypeNo];
-    }
-    else {
-        [self.parentTextView restoreOriginalAutocorrection:YES];
-    }
+    // TEMPORARY FIX: Disable autocorrection to avoid crashes
+    
+//    BOOL shouldDisable = [self rangeTouchesMentions:range] || [self rangeTouchesMentions:self.parentTextView.selectedRange];
+//    if (shouldDisable) {
+//        [self.parentTextView overrideAutocorrectionWith:UITextAutocorrectionTypeNo];
+//    }
+//    else {
+//        [self.parentTextView restoreOriginalAutocorrection:YES];
+//    }
 }
 
 
