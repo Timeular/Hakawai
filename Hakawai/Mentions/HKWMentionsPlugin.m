@@ -1677,7 +1677,7 @@ typedef NS_ENUM(NSInteger, HKWMentionsState) {
                        || (self.characterForAdvanceStateForCharacterInsertion != 0
                            && [whitespaces characterIsMember:self.characterForAdvanceStateForCharacterInsertion]));
     [self performMentionCreationEndCleanup:canRestart];
-    [self.parentTextView restoreOriginalAutocorrection:(self.state != HKWMentionsStateLosingFocus)];
+    // [self.parentTextView restoreOriginalAutocorrection:(self.state != HKWMentionsStateLosingFocus)];
 }
 
 - (void)createMention:(HKWMentionsAttribute *)mention startingLocation:(NSUInteger)location {
