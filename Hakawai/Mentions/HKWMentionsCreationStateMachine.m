@@ -188,9 +188,11 @@ typedef NS_ENUM(NSInteger, HKWMentionsCreationAction) {
         case HKWMentionsCreationNetworkStateReady: {
             // User is creating a mention, and can fire off a network request immediately if necessary.
             if (isNewline) {
-                // User ended mention creation by typing a newline
-                self.state = HKWMentionsCreationStateQuiescent;
-                [self.delegate cancelMentionFromStartingLocation:self.startingLocation];
+                // We add first mention from the list
+                [self modelObjectSelectedAtIndex:0];
+//                // User ended mention creation by typing a newline
+//                self.state = HKWMentionsCreationStateQuiescent;
+//                [self.delegate cancelMentionFromStartingLocation:self.startingLocation];
             }
             else {
                 [self.stringBuffer appendString:string];
